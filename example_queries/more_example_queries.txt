@@ -1,0 +1,29 @@
+Example queries for Jeanine for website
+
+GRANT SELECT ON user_dataset TO bien_private;
+GRANT SELECT ON user_dataset TO jmcgann;
+
+-- Full query results
+SELECT username, observation_type, source_id, datasource_id, provider, source_name 
+FROM user_dataset 
+ORDER BY username, source_name
+;
+
+
+// Example PHP
+
+// Filtered by username
+$query3 = "
+SELECT observation_type, source_id, datasource_id, provider, source_name 
+FROM users.user_dataset 
+WHERE username = '" .$username. "' 
+ORDER BY username, source_name
+";
+
+// Filtered by username & observation_type
+$query3 = "
+SELECT username, observation_type, source_id, datasource_id, provider, source_name 
+FROM users.user_dataset 
+WHERE username = '" .$username. "' AND observation_type='" .$obs_type. "' 
+ORDER BY username, source_name
+";
