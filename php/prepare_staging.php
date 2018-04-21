@@ -21,43 +21,13 @@ include "global_params.inc";
 ////////////////////////////////////////////////////////////
 
 $HOST=="localhost"?$hostname=exec('hostname -f'):$hostname=$HOST;
-$db_backup_display=$use_db_backup===true?"\r\n  Backup database: $DB_BACKUP":"";
-$replace_db_display=$replace_db?'Yes':'No';
 
 // Confirm basic parameters 
 $msg_proceed="
-Rebuilding TNRS database with the following settings:\r\n
-  Host: $hostname
-  Main database: $DB
-  Replace database: $replace_db_display".$db_backup_display."\r\n  Sources: $sources\r\n
+Populate MPTT indexes in table '$tbl' in database '$DB;'?
 Enter 'Yes' to proceed, or 'No' to cancel: ";
 $proceed=responseYesNoDie($msg_proceed);
 if ($proceed===false) die("\r\nOperation cancelled\r\n");
-
-// Check if database exists
-$cmd="mysql -u $USER --password=$PWD -e \"USE '$DB'\" 2>/dev/null";
-exec($cmd,$output,$exitcode);
-$dbexists=$exitcode;
-
-// Confirm replacement of database if requested
-if ($replace_db & !$dbexists) {
-	$msg_conf_replace_db="\r\nPrevious database `$DB` will be deleted! Are you sure you want to proceed? (Y/N): ";
-	$replace_db=responseYesNoDie($msg_conf_replace_db);
-	if ($replace_db===false) die ("\r\nOperation cancelled\r\n");
-}
-
-// Confirm deletion of backup database
-if ($use_db_backup) {
-	$cmd="mysql -u $USER --password=$PWD -e \"USE '$DB_BACKUP'\" 2>/dev/null";
-	exec($cmd,$output,$exitcode);
-	$dbexists=$exitcode;
-	$msg_confirm_delete_db_backup="\r\nAlso replace previous backup database '".$DB_BACKUP."'? (Y/N): ";
-	$delete_db_backup=true;
-	if (!$dbexists) {
-		$delete_db_backup=responseYesNoDie($msg_confirm_delete_db_backup);
-		if ($delete_db_backup===false) die ("\r\nOperation cancelled\r\n");		
-	}
-}
 
 // Check basic dependencies are present: directories, files
 // This is currently pretty basic, but can be expanded as needed
@@ -67,8 +37,15 @@ include_once "check_dependencies.inc";
 // Start timer and connect to mysql
 echo "\r\nBegin operation\r\n";
 include $timer_on;
-$dbh = mysql_connect($HOST,$USER,$PWD,FALSE,128);
-if (!$dbh) die("\r\nCould not connect to database!\r\n");
+
+
+// Open connection to PostGreSQL
+$conn_string = "host=$HOST dbname=$DB user=$USER";
+$dbconn = pg_connect($conn_string);
+
+$dbh = $pg_connect("...") or die('\r\nCould not connect to database!\r\n');
+exit("Connected to postgres!\r\n");
+
 
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////

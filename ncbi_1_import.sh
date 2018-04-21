@@ -141,7 +141,7 @@ EOF
 done
 
 ############################################
-# Insert test user(s) - development only
+# Create indexes and constraints
 ############################################
 
 echoi $e -n "Creating indexes and constraints..."
