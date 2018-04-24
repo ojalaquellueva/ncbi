@@ -9,8 +9,8 @@
 // PHP applications. Up to you.
 //////////////////////////////////////////////////
 
-$local_utilities_path="functions/php/";
-$global_utilities_path="../functions/php/";
+//$local_utilities_path="functions/php/";
+$global_utilities_path="functions/php/";
 
 //////////////////////////////////////////////////
 // Db connection info
@@ -81,7 +81,9 @@ $preroot = FALSE;
 // Table & column names
 //////////////////////////////////////////////////
 
-$tbl = "nodes";			
+$tbl = "nodes";	
+//$tbl = "mptt_test";	// For testing
+		
 $id_fld = "tax_id";					// Name of ID field (PK) for this table
 $parent_id_fld = "parent_tax_id";	// Name of recursive FK to PK
 $left_index_fld = "left_index";		// Name of left index field

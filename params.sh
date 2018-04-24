@@ -58,6 +58,7 @@ email="bboyle@email.arizona.edu"
 # notification emails. Number suffix matches script suffix
 pname="Build database 'ncbi'"
 pname2="Populate MPTT indexes"
+pname3="Create ncbi_species"
 
 # General process name prefix for email notifications
 pname_header_prefix="BIEN notification: process"

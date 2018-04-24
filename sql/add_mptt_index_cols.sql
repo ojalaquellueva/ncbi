@@ -1,9 +1,9 @@
 -- --------------------------------------------------------
--- Add mptt index columns to table
+-- Add mptt index columns to table nodes
 -- --------------------------------------------------------
 
-ALTER TABLE :tbl DROP COLUMN IF EXISTS :lcol;
-ALTER TABLE :tbl DROP COLUMN IF EXISTS :rcol;
+ALTER TABLE nodes DROP COLUMN IF EXISTS left_index;
+ALTER TABLE nodes DROP COLUMN IF EXISTS right_index;
 
-ALTER TABLE :tbl ADD COLUMN :lcol bigint default null;
-ALTER TABLE :tbl ADD COLUMN :rcol bigint default null;
+ALTER TABLE nodes ADD COLUMN left_index bigint default null;
+ALTER TABLE nodes ADD COLUMN right_index bigint default null;
