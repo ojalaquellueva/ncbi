@@ -48,13 +48,14 @@ source "$DIR/includes/confirm.sh"
 #########################################################################
 
 : <<'COMMENT_BLOCK_1'
-COMMENT_BLOCK_1
+
 
 # Check that data directory exists
 if [ ! -d "$DATA_DIR" ]; then
 	echo "ERROR: Data directory  \"$DATA_DIR\" doesn't exist. Please create it before before running this script."; echo
 	exit 1
 fi
+COMMENT_BLOCK_1
 
 # Prompt to replace dev schema exists before starting
 # Safer to do this manually
@@ -80,11 +81,11 @@ if [[ "$download" == "t" ]]; then
 	
 	echoi $e -n " - Downloading..."
 	target_dir=$DATA_DIR"/"
-	wget -q -P $target_dir $src_url
+	wget $src_url -P $target_dir -q
 	source "$DIR/includes/check_status.sh"
 	
 	echoi $e -n " - Extracting..."	
-	tar -xzf $DATA_DIR"/"$src_file
+	tar -xzf $DATA_DIR"/"$src_file -C $DATA_DIR"/"
 	source "$DIR/includes/check_status.sh"
 else 
 	echoi $e "skipping download"
@@ -173,7 +174,7 @@ done
 ############################################
 
 echoi $e -n "Creating indexes and constraints..."
-PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -v sch=$sch_users_dev -f $DIR_LOCAL/sql/add_indexes_constraints.sql
+PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/add_indexes_constraints.sql
 source "$DIR/includes/check_status.sh"
 
 ######################################################

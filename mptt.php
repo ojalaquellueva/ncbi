@@ -1,3 +1,4 @@
+#!/usr/bin/php
 <?php
 
 //////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ if ($num_rows<1) {
 } else {
 	//$row = pg_fetch_row($result);
 	$root_id=$row[0];
-	echo $done;
+	echo "done\n";
 }
 
 // Populate left and right indexes using recursive tree traversal

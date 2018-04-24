@@ -8,6 +8,8 @@ CREATE TABLE ncbi_taxa (
 name_id bigint not null,
 tax_id bigint not null,
 rank text not null,
+major_higher_taxon text default null,
+is_embryophyte smallint default 0,
 superkingdom text default null,
 kingdom text default null,
 phylum text default null,
@@ -19,7 +21,7 @@ left_index bigint default null,
 right_index bigint default null
 );
 
--- Add all names where rank=speces
+-- Insert species names
 INSERT INTO ncbi_taxa (
 name_id,
 tax_id,
@@ -44,7 +46,7 @@ ON a.tax_id=b.tax_id
 WHERE b.rank='species'
 ;
 
--- Add all names where rank=speces
+-- Insert family names
 INSERT INTO ncbi_taxa (
 name_id,
 tax_id,
@@ -63,7 +65,7 @@ a.unique_name,
 a.name_class,
 b.left_index,
 b.right_index,
-'species'
+'family'
 FROM names a JOIN nodes b
 ON a.tax_id=b.tax_id
 WHERE b.rank='family'
