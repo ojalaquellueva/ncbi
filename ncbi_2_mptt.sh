@@ -57,35 +57,20 @@ source "$DIR/includes/confirm.sh"
 ############################################
 
 echoi $e "Preparing table nodes:"
-# Name of table and the mptt index columns
-tbl="nodes"
-rcol="right_index"
-lcol="left_index"
 
 echoi $e -n "- Adding mptt index columns..."
-PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -v tbl=$tbl -v lcol=$lcol -v rcol=$rcol -f $DIR_LOCAL/sql/add_mptt_index_cols.sql
+PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/add_mptt_index_cols.sql
 source "$DIR/includes/check_status.sh"
 
-echoi $e -n " -Adding & populating scientific name column..."
+echoi $e -n "- Adding & populating scientific name column..."
 PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/add_names.sql
 source "$DIR/includes/check_status.sh"
-
-
-
-echo; echo "EXITING script `basename "$BASH_SOURCE"`"; exit 0
 
 ############################################
 # Populate the mptt indexes
 ############################################
 
-# Name of table, pkey and recursive fkey
-tbl="nodes"
-idcol="tax_id"
-pidcol"parent_tax_id"
-
-echoi $e -n "Adding mptt index columns to table nodes..."
-PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -v tbl=$tbl -v idcol=$idcol -v pidcol=$pidcol -f $DIR_LOCAL/sql/add_index_columns.sql
-source "$DIR/includes/check_status.sh"
+source "$DIR/mptt.php"
 
 ######################################################
 # Report total elapsed time and exit

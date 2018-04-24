@@ -47,21 +47,52 @@ source "$DIR/includes/confirm.sh"
 # Main
 #########################################################################
 
-############################################
-# Create empty user development schema 
-############################################
-
-
 : <<'COMMENT_BLOCK_1'
+COMMENT_BLOCK_1
 
+# Check that data directory exists
+if [ ! -d "$DATA_DIR" ]; then
+	echo "ERROR: Data directory  \"$DATA_DIR\" doesn't exist. Please create it before before running this script."; echo
+	exit 1
+fi
 
 # Prompt to replace dev schema exists before starting
 # Safer to do this manually
 #db_exists=$(exists_db_psql -d $db -u $user )
 if psql -lqt | cut -d \| -f 1 | grep -qw $db; then
-	echo "WARNING: Database '$db' already exists! Drop first before running this script."; echo
+	echo "ERROR: Database '$db' already exists! Drop first before running this script."; echo
 	exit 1
 fi
+
+############################################
+# Download data
+############################################
+
+echoi $e "Downloading files from ftp site:"
+if [[ "$download" == "t" ]]; then
+	echoi $e " - Source url: $src_url"
+	echoi $e " - Target directory: $DATA_DIR"
+	
+	# Delete file if it already exists
+	if [ -f $DATA_DIR"/"$src_file ]; then	
+		rm $DATA_DIR"/"$src_file
+	fi
+	
+	echoi $e -n " - Downloading..."
+	target_dir=$DATA_DIR"/"
+	wget -q -P $target_dir $src_url
+	source "$DIR/includes/check_status.sh"
+	
+	echoi $e -n " - Extracting..."	
+	tar -xzf $DATA_DIR"/"$src_file
+	source "$DIR/includes/check_status.sh"
+else 
+	echoi $e "skipping download"
+fi 
+
+############################################
+# Create empty user development schema 
+############################################
 
 # Create database as user postgres in case user $user does not have
 # CREATE DATABASE privileges
@@ -72,10 +103,6 @@ source "$DIR/includes/check_status.sh"
 echoi $e -n "Changing owner of database '$db' to $user..."
 sudo -u postgres PGOPTIONS='--client-min-messages=warning' psql --set ON_ERROR_STOP=1 -q -c "ALTER DATABASE ncbi OWNER TO bien"
 source "$DIR/includes/check_status.sh"	
-
-
-COMMENT_BLOCK_1
-
 
 # Create tables
 echoi $e -n "Creating tables..."
@@ -137,6 +164,7 @@ for tbl in $tables; do
 	$sql
 EOF
 	source "$DIR/includes/check_status.sh"
+	
 	rm $DATA_DIR/$tempfile
 done
 

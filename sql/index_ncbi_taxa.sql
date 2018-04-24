@@ -1,0 +1,24 @@
+ALTER TABLE ncbi_taxa DROP CONSTRAINT IF EXISTS ncbi_taxa_pkey;
+ALTER TABLE ncbi_taxa ALTER COLUMN name_id DROP DEFAULT;
+DROP SEQUENCE IF EXISTS ncbi_taxa_name_id_seq;
+DROP INDEX IF EXISTS ncbi_taxa_name_id_idx;
+DROP INDEX IF EXISTS ncbi_taxa_tax_id_idx;
+DROP INDEX IF EXISTS ncbi_taxa_rank_idx;
+DROP INDEX IF EXISTS ncbi_taxa_superkingdom_idx;
+DROP INDEX IF EXISTS ncbi_taxa_kingdom_idx;
+DROP INDEX IF EXISTS ncbi_taxa_phylum_idx;
+DROP INDEX IF EXISTS ncbi_taxa_class_idx;
+DROP INDEX IF EXISTS ncbi_taxa_species_idx;
+DROP INDEX IF EXISTS ncbi_taxa_unique_species_idx;
+DROP INDEX IF EXISTS ncbi_taxa_name_class_idx;
+
+ALTER TABLE ncbi_taxa ADD PRIMARY KEY (name_id);
+CREATE INDEX ncbi_taxa_tax_id_idx ON ncbi_taxa (tax_id);
+CREATE INDEX ncbi_taxa_rank_idx ON ncbi_taxa (rank);
+CREATE INDEX ncbi_taxa_superkingdom_idx ON ncbi_taxa (superkingdom);
+CREATE INDEX ncbi_taxa_kingdom_idx ON ncbi_taxa (kingdom);
+CREATE INDEX ncbi_taxa_phylum_idx ON ncbi_taxa (phylum);
+CREATE INDEX ncbi_taxa_class_idx ON ncbi_taxa ("class");
+CREATE INDEX ncbi_taxa_taxon_idx ON ncbi_taxa (taxon);
+CREATE INDEX ncbi_taxa_unique_taxon_idx ON ncbi_taxa (unique_taxon);
+CREATE INDEX ncbi_taxa_name_class_idx ON ncbi_taxa (name_class);

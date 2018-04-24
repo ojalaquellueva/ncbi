@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #########################################################################
-# Purpose: Creates table ncbi_species, consisting of all ncbi species
+# Purpose: Creates table ncbi_taxa, consisting of all ncbi species
 #	names and their (selected) higher taxa
 #
 # Requirement: 
@@ -60,16 +60,20 @@ echoi $e -n "Adding primary key to table names..."
 PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/names_add_pk.sql
 source "$DIR/includes/check_status.sh"
 
-echoi $e -n "Creating table ncbi_species..."
-PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/create_ncbi_species.sql
+echoi $e -n "Creating table ncbi_taxa..."
+PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/create_ncbi_taxa.sql
 source "$DIR/includes/check_status.sh"
 
 echoi $e -n "Populating higher taxa (slow)..."
 PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/populate_higher_taxa.sql
 source "$DIR/includes/check_status.sh"
 
-echoi $e -n "Indexing ncbi_species..."
-PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/index_ncbi_species.sql
+echoi $e -n "Indexing ncbi_taxa..."
+PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/index_ncbi_taxa.sql
+source "$DIR/includes/check_status.sh"
+
+echoi $e -n "Cleaning up..."
+PGOPTIONS='--client-min-messages=warning' psql -U $user -d $db --set ON_ERROR_STOP=1 -q -f $DIR_LOCAL/sql/cleanup_ncbi_taxa.sql
 source "$DIR/includes/check_status.sh"
 
 ######################################################

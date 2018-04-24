@@ -5,6 +5,20 @@
 # Check and change as needed
 ##############################################################
 
+# Download data from NCBI ftp site (t/f)
+# Set to false if data already present in data directory and does
+# not need a refresh
+download='t'
+
+# URL of ncbi taxonomy ftp site
+url="ftp://ftp.ncbi.nih.gov/pub/taxonomy"
+
+# Name of file to download
+src_file="taxdump.tar.gz"
+
+# full target
+src_url=$url"/"$src_file
+
 # Path to db_config.sh
 # For production, keep outside app working directory & supply
 # absolute path
@@ -29,9 +43,6 @@ functions_path="/home/boyle/functions/sh"
 # Omit trailing slash
 data_base_dir="/home/boyle/bien3/ncbi/data"	# Absolute path
 #data_base_dir="data"		 					# Relative path
-
-# Some other database to connect to at start, before creating gnrs db
-someotherdb="boyle"
 
 # NCBI files & the tables to load them to.
 # One name per line, no commas or quotes.
@@ -58,7 +69,7 @@ email="bboyle@email.arizona.edu"
 # notification emails. Number suffix matches script suffix
 pname="Build database 'ncbi'"
 pname2="Populate MPTT indexes"
-pname3="Create ncbi_species"
+pname3="Create ncbi_taxa"
 
 # General process name prefix for email notifications
 pname_header_prefix="BIEN notification: process"
